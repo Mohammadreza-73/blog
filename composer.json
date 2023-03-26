@@ -1,0 +1,23 @@
+{
+    "name": "m.rahimi/blog",
+    "description": "Pure php blog",
+    "keywords": [
+        "blog",
+        "mvc blog"
+    ],
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mohammadreza-73",
+            "email": "mohammadreza.rahimi93@yahoo.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "minimum-stability": "dev"
+}
