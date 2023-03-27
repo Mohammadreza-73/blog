@@ -7,10 +7,61 @@ if (! function_exists('base_path')) {
     }
 }
 
-if (! function_exists('config_path')) {
-    function config_path(string $filename)
+if (! function_exists('app_path')) {
+    function app_path(string $path = '')
     {
-        return base_path('config') . DIRECTORY_SEPARATOR . $filename . '.php';
+        return base_path('app') . DIRECTORY_SEPARATOR . $path;
+    }
+}
+
+if (! function_exists('config_path')) {
+    function config_path()
+    {
+        return base_path('config');
+    }
+}
+
+if (! function_exists('resource_path')) {
+    function resource_path(string $path = '')
+    {
+        return base_path('resources') . DIRECTORY_SEPARATOR . $path;
+    }
+}
+
+if (! function_exists('config')) {
+    function config(string $filename)
+    {
+        $config = config_path() . DIRECTORY_SEPARATOR . $filename . '.php';
+
+        if (! file_exists($config)) {
+            throw new Exception("Config file [$filename] not found.");
+        }
+
+        return require $config;
+    }
+}
+
+if (! function_exists('view')) {
+    function view(string $filename)
+    {
+        $view = resource_path('views') . DIRECTORY_SEPARATOR . $filename . '.php';
+
+        if (! file_exists($view)) {
+            throw new Exception("View file [$filename] not found.");
+        }
+
+        return require $view;
+    }
+}
+
+if (! function_exists('abort')) {
+    function abort(int $code = 404)
+    {
+        http_response_code($code);
+
+        require view("errors/{$code}");
+
+        die();
     }
 }
 
