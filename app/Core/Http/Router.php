@@ -4,7 +4,9 @@ namespace App\Core\Http;
 
 class Router
 {
+    private const BASE_CONTROLLER = 'App\\Http\\Controllers\\';
     private array $routes = [];
+    private array $parameters = [];
     private Request $request;
     private $current_route;
 
@@ -17,7 +19,7 @@ class Router
 
     public function run()
     {
-        // TODO: Implement
+        $this->dispatch($this->current_route, $this->parameters);
     }
 
     private function findRoute(Request $request)
@@ -28,11 +30,18 @@ class Router
             }
         }
 
-        return null;
+        abort();
     }
 
-    private function dispatch(array $route)
+    private function dispatch(array $current_route, array $parameters = []): void
     {
-        // TODO: Implement
+        $action = $current_route['controller'];
+
+        $class = self::BASE_CONTROLLER . $action[0];
+        $method = $action[1];
+
+        $controller = new $class;
+
+        $controller->$method(...$parameters);
     }
 }
