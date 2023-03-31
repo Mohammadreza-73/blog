@@ -42,8 +42,9 @@ if (! function_exists('config')) {
 }
 
 if (! function_exists('view')) {
-    function view(string $filename)
+    function view(string $filename, array $attributes = [])
     {
+        extract($attributes);
         $view = resource_path('views') . DIRECTORY_SEPARATOR . $filename . '.php';
 
         if (! file_exists($view)) {
@@ -59,7 +60,7 @@ if (! function_exists('abort')) {
     {
         http_response_code($code);
 
-        require view("errors/{$code}");
+        view("errors/{$code}");
 
         die();
     }
