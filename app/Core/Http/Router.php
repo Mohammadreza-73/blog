@@ -2,6 +2,9 @@
 
 namespace App\Core\Http;
 
+use App\Core\Exceptions\ClassNotFoundException;
+use App\Core\Exceptions\MethodNotFoundException;
+
 class Router
 {
     private const BASE_CONTROLLER = 'App\\Http\\Controllers\\';
@@ -19,6 +22,7 @@ class Router
 
     public function run()
     {
+        // dd($this->current_route);
         $this->dispatch($this->current_route, $this->parameters);
     }
 
@@ -38,7 +42,16 @@ class Router
         $action = $current_route['controller'];
 
         $class = self::BASE_CONTROLLER . $action[0];
+
+        if (! class_exists($class)) {
+            throw new ClassNotFoundException("Controller [$class] not exists.");
+        }
+
         $method = $action[1];
+
+        if (! method_exists($class, $method)) {
+            throw new MethodNotFoundException("Method [$method], in controller [$class] not found.");
+        }
 
         $controller = new $class;
 
