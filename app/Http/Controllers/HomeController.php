@@ -8,4 +8,9 @@ class HomeController
     {
         return view('home');
     }
+
+    public function home($id)
+    {
+        echo $id;
+    }
 }

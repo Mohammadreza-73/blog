@@ -22,24 +22,45 @@ class Router
 
     public function run()
     {
-        // dd($this->current_route);
         $this->dispatch($this->current_route, $this->parameters);
     }
 
     private function findRoute(Request $request)
     {
         foreach ($this->routes as $route) {
-            if ($request->uri === $route['uri'] && $request->method === $route['method']) {
-                return $route;
+            if ($request->method === $route['method'] && $this->isUriMatched($route)) {
+                    return $route;
             }
         }
 
         abort();
     }
 
-    private function dispatch(array $current_route, array $parameters = []): void
+    private function isUriMatched(array $route)
     {
-        $action = $current_route['controller'];
+        $pattern = '/^' . str_replace(['/', '{', '}'], ['\/', '(?<', '>[-%\w]+)'], $route['uri']) . '$/';
+        $result = preg_match($pattern, $this->request->uri, $matches);
+
+        if (! $result) {
+            return false;
+        }
+
+        foreach ($matches as $key => $value) {
+            if (! is_int($key)) {
+                $this->parameters[$key] = $value;
+
+                $this->dispatch($this->current_route, $this->parameters);
+            }
+        }
+
+        return true;
+    }
+
+    private function dispatch(?array $route, array $parameters = []): void
+    {
+        $action = $route['controller'] ?? null;
+
+        if (is_null($action)) { return; }
 
         $class = self::BASE_CONTROLLER . $action[0];
 
