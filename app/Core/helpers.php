@@ -29,15 +29,21 @@ if (! function_exists('resource_path')) {
 }
 
 if (! function_exists('config')) {
-    function config(string $filename)
+    function config(string $name, string $key = null)
     {
-        $config = config_path() . DIRECTORY_SEPARATOR . $filename . '.php';
+        $config = config_path() . DIRECTORY_SEPARATOR . $name . '.php';
 
         if (! file_exists($config)) {
-            throw new Exception("Config file [$filename] not found.");
+            throw new Exception("Config file [$name] not found.");
         }
 
-        return require $config;
+        $config = require $config;
+
+        if (is_null($key)) {
+            return $config;
+        }
+
+        return $config[$key] ?? null;
     }
 }
 
