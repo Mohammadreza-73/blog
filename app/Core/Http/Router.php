@@ -2,6 +2,7 @@
 
 namespace App\Core\Http;
 
+use Closure;
 use App\Core\Exceptions\ClassNotFoundException;
 use App\Core\Exceptions\MethodNotFoundException;
 
@@ -62,20 +63,26 @@ class Router
 
         if (is_null($action)) { return; }
 
-        $class = self::BASE_CONTROLLER . $action[0];
-
-        if (! class_exists($class)) {
-            throw new ClassNotFoundException("Controller [$class] not exists.");
+        if (is_callable($action) && $action instanceof Closure) {
+            call_user_func($action, ...$parameters);
         }
 
-        $method = $action[1];
+        if (is_array($action)) {
+            $class = self::BASE_CONTROLLER . $action[0];
 
-        if (! method_exists($class, $method)) {
-            throw new MethodNotFoundException("Method [$method], in controller [$class] not found.");
+            if (! class_exists($class)) {
+                throw new ClassNotFoundException("Controller [$class] not exists.");
+            }
+
+            $method = $action[1];
+
+            if (! method_exists($class, $method)) {
+                throw new MethodNotFoundException("Method [$method], in controller [$class] not found.");
+            }
+
+            $controller = new $class;
+
+            $controller->$method(...$parameters);
         }
-
-        $controller = new $class;
-
-        $controller->$method(...$parameters);
     }
 }
