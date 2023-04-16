@@ -2,7 +2,7 @@
 
 return [
     'host' => 'localhost',
-    'databse' => 'blog',
+    'dbname' => 'blog',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8mb4',
