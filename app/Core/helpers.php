@@ -1,5 +1,7 @@
 <?php
 
+use App\Core\Http\Response;
+
 if (! function_exists('base_path')) {
     function base_path(string $path = '')
     {
@@ -80,5 +82,12 @@ if (! function_exists('dd')) {
         echo '</pre>';
 
         die();
+    }
+}
+
+if (! function_exists('json')) {
+    function json(array $data)
+    {
+        return Response::json($data);
     }
 }
