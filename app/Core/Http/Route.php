@@ -20,7 +20,10 @@ class Route
             'uri' => $uri,
             'method' => $method,
             'controller' => $controller,
+            'middleware' => null,
         ];
+
+        return new static;
     }
 
     public static function get(string $uri, $controller)
@@ -51,5 +54,10 @@ class Route
     public static function all()
     {
         return self::$routes;
+    }
+
+    public function middleware(string $key)
+    {
+        
     }
 }
