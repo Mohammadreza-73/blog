@@ -12,7 +12,7 @@ class Route
      * @param  string $method
      * @param  string $uri
      * @param  Closure|string|array $controller
-     * @return void
+     * @return static
      */
     public static function add(string $method, string $uri, $controller)
     {
@@ -23,7 +23,7 @@ class Route
             'middleware' => null,
         ];
 
-        return new static;
+        return new static();
     }
 
     public static function get(string $uri, $controller)
@@ -58,6 +58,8 @@ class Route
 
     public function middleware(string $key)
     {
-        
+        self::$routes[array_key_last(self::$routes)]['middleware'] = $key;
+
+        return new static;
     }
 }
