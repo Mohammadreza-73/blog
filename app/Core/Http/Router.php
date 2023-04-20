@@ -3,6 +3,7 @@
 namespace App\Core\Http;
 
 use Closure;
+use App\Core\Http\Middleware\Middleware;
 use App\Core\Exceptions\ClassNotFoundException;
 use App\Core\Exceptions\MethodNotFoundException;
 
@@ -30,7 +31,9 @@ class Router
     {
         foreach ($this->routes as $route) {
             if ($request->method === $route['method'] && $this->isUriMatched($route)) {
-                    return $route;
+                Middleware::resolve($route['middleware']);
+
+                return $route;
             }
         }
 
