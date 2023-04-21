@@ -91,3 +91,17 @@ if (! function_exists('json')) {
         return Response::json($data);
     }
 }
+
+if (! function_exists('redirect')) {
+    function redirect(string $uri)
+    {
+        header("Location: {$uri}");
+        exit();
+    }
+}
+
+if (! function_exists('previousUrl')) {
+    function previousUrl() {
+        return $_SERVER['HTTP_REFERER'] ?? null;
+    }
+}
