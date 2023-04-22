@@ -50,13 +50,14 @@ if (! function_exists('config')) {
 }
 
 if (! function_exists('view')) {
-    function view(string $filename, array $attributes = [])
+    function view(string $path, array $attributes = [])
     {
         extract($attributes);
-        $view = resource_path('views') . DIRECTORY_SEPARATOR . $filename . '.php';
+        $path = str_replace('.', '/', $path);
+        $view = resource_path('views') . DIRECTORY_SEPARATOR . $path . '.php';
 
         if (! file_exists($view)) {
-            throw new Exception("View file [$filename] not found.");
+            throw new Exception("View file [$path] not found.");
         }
 
         return require $view;
@@ -103,5 +104,18 @@ if (! function_exists('redirect')) {
 if (! function_exists('previousUrl')) {
     function previousUrl() {
         return $_SERVER['HTTP_REFERER'] ?? null;
+    }
+}
+
+if (! function_exists('url')) {
+    function url(string $route = '/') {
+        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . $route;
+    }
+}
+
+if (! function_exists('inputs')) {
+    function inputs()
+    {
+        return array_map('trim', $_REQUEST);
     }
 }
