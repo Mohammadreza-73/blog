@@ -8,7 +8,7 @@
 </head>
 <body>
     <div>
-        <h4><?= $msg ?></h4>
+        <h4><?= $succes ?? $error ?></h4>
     </div>
     <form action="<?= url('/verify') ?>" method="post">
         <label for="email">Eamil: </label>

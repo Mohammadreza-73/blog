@@ -7,6 +7,9 @@
     <title>Signup</title>
 </head>
 <body>
+    <div>
+        <h4><?= $succes ?? $error ?></h4>
+    </div>
     <form action="<?= url('/register') ?>" method="post">
         <label for="email">Eamil: </label>
         <input type="email" name="email" id="email">
