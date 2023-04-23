@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Http\Controller;
+
 class HomeController extends Controller
 {
     public function index()
