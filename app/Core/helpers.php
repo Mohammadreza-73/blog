@@ -135,3 +135,10 @@ if (! function_exists('now')) {
         return date('Y-m-d H:i:s');
     }
 }
+
+if (! function_exists('session')) {
+    function session(string $key)
+    {
+        return Session::get($key);
+    }
+}
