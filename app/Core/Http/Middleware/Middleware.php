@@ -11,8 +11,12 @@ class Middleware
         'auth' => Authenticated::class,
     ];
 
-    public static function resolve(string $key)
+    public static function resolve(?string $key)
     {
+        if (is_null($key)) {
+            return;
+        }
+
         $middleware = self::MAP[$key] ?? false;
 
         if (! $middleware) {
