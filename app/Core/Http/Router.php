@@ -31,9 +31,7 @@ class Router
     {
         foreach ($this->routes as $route) {
             if ($request->method === $route['method'] && $this->isUriMatched($route)) {
-                if (isset($route['middleware'])) {
-                    Middleware::resolve($route['middleware']);
-                }
+                Middleware::resolve($route['middleware']);
 
                 return $route;
             }

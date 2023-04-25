@@ -2,7 +2,7 @@
 
 use App\Core\Http\Route;
 
-Route::get('/', [HomeController::class, 'index'])->middleware('guest');
+Route::get('/', [HomeController::class, 'index']);
 Route::get('/admin', [HomeController::class, 'dashboard'])->middleware('auth');
 
 Route::get('/login', [AuthController::class, 'login'])->middleware('guest');
