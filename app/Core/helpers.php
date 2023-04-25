@@ -1,5 +1,6 @@
 <?php
 
+use App\Core\Session;
 use App\Core\Http\Response;
 
 if (! function_exists('base_path')) {
@@ -94,15 +95,23 @@ if (! function_exists('json')) {
 }
 
 if (! function_exists('redirect')) {
-    function redirect(string $uri)
+    function redirect(string $uri, string $key = null, string $value = null)
     {
+        if (isset($key) && isset($value)) {
+            Session::flash($key, $value);
+        }
+
         header("Location: {$uri}");
         exit();
     }
 }
 
-if (! function_exists('previousUrl')) {
-    function previousUrl() {
+if (! function_exists('back')) {
+    function back(string $key = null, string $value = null) {
+        if (isset($key) && isset($value)) {
+            Session::flash($key, $value);
+        }
+
         return $_SERVER['HTTP_REFERER'] ?? null;
     }
 }
@@ -117,5 +126,19 @@ if (! function_exists('inputs')) {
     function inputs()
     {
         return array_map('trim', $_REQUEST);
+    }
+}
+
+if (! function_exists('now')) {
+    function now()
+    {
+        return date('Y-m-d H:i:s');
+    }
+}
+
+if (! function_exists('session')) {
+    function session(string $key)
+    {
+        return Session::get($key);
     }
 }
