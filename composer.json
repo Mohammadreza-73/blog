@@ -1,10 +1,7 @@
 {
     "name": "m.rahimi/blog",
     "description": "Pure php blog",
-    "keywords": [
-        "blog",
-        "mvc blog"
-    ],
+    "keywords": ["blog", "pure blog", "mvc blog"],
     "type": "project",
     "license": "MIT",
     "authors": [
