@@ -2,66 +2,74 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\App;
 use App\Core\Session;
-use App\Core\Authenticator;
+use App\Core\Validator;
+use App\Core\Authenticatable;
+use App\Core\Http\Controller;
 
-class AuthController
+class AuthController extends Controller
 {
-    private $auth;
-    private $db;
-
-    public function __construct()
-    {
-        $this->auth = new Authenticator;  // Can declare as trait
-        $this->db = App::resolve('Core\Database');
-    }
+    use Authenticatable;
 
     public function login()
     {
-        $msg = Session::get('msg');
-        return view('auth.login', compact('msg'));
+        $succes = Session::get('succes');
+
+        return view('auth.login', compact('succes'));
     }
 
     public function verify()
     {
-        # 1. get trimed user inputs
         $inputs = inputs();
 
         // TODO: validation
 
-        #2. attemp user verify
-        dd($this->auth->attemp($inputs['email'], $inputs['password']));
+        if ($this->attemp($inputs['email'], $inputs['password'])) {
+            return redirect('/admin'); // Bug: to many redirects
 
-        #3. if verify redirect to admin
+        } else {
+            return redirect('/login', 'error', 'Invalid email or password.');
+        }
     }
 
     public function signup()
     {
-        return view('auth.signup');
+        $error = Session::get('error');
+
+        return view('auth.signup', compact('error'));
     }
 
     public function register()
     {
         $inputs = inputs();
 
-        // TODO: validation
+        $errors = [];
+        if (! Validator::email($inputs['email'])) {
+            $errors['email'] = 'Please provide a valid email address.';
+        }
 
-        $user = $this->db->query("SELECT * FROM `users` WHERE `email` = :email", [
-            'email' => $inputs['email'],
+        if (! Validator::string($inputs['password'], 7, 20)) {
+            $errors['password'] = 'Please provide a password of at least seven characters.';
+        }
+
+        if (! empty($errors)) {
+            return view('auth.signup', compact('errors'));
+        }
+
+        $user = $this->db()->query("SELECT * FROM `users` WHERE `email` = :email", [
+            'email' => Validator::email($inputs['email']),
         ])->find();
 
         if ($user) {
-            return redirect('/');  // pass message to view: 'user alerady exists.'
+            return redirect('/signup', 'error', 'User already exists.');
         }
 
-        $this->db->query("INSERT INTO `users`(`email`, `password`, `created_at`) VALUES (:email, :password, :created_at)", [
-            'email' => $inputs['email'],
+        $this->db()->query("INSERT INTO `users`(`email`, `password`, `created_at`) VALUES (:email, :password, :created_at)", [
+            'email' => Validator::email($inputs['email']),
             'password' => password_hash($inputs['password'], PASSWORD_BCRYPT),
             'created_at' => now(),
         ]);
 
-
-        return redirect('/login', 'msg', 'User registered successfully.');
+        return redirect('/login', 'succes', 'User registered successfully.');
     }
 }
