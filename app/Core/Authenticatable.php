@@ -2,19 +2,12 @@
 
 namespace App\Core;
 
-class Authenticator
+trait Authenticatable
 {
-    private $db;
-
-    public function __construct()
-    {
-        $this->db = App::resolve('Core\Database');
-    }
-
     public function attemp(string $email, string $password)
     {
-        $user = $this->db->query("SELECT * FROM `users` WHERE `email` = :email", [
-            'email' => $email, // should validate
+        $user = $this->db()->query("SELECT * FROM `users` WHERE `email` = :email", [
+            'email' => $email,
         ])->find();
 
         if ($user) {
@@ -34,9 +27,7 @@ class Authenticator
     {
         $user = is_object($user) ? $user : (object) $user;
 
-        $_SESSION['user'] = [
-            'email' => $user->email,
-        ];
+        Session::flash('email', $user->email);
 
         // Prevent Session Hijacking
         session_regenerate_id(true);
