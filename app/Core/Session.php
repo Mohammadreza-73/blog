@@ -19,7 +19,7 @@ class Session
         return (bool) static::get($key);
     }
 
-    public static function flash(string $key, string $value)
+    public static function flash(string $key, $value)
     {
         $_SESSION['_flash'][$key] = $value;
     }
