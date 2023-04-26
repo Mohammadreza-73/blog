@@ -22,7 +22,14 @@ class AuthController extends Controller
     {
         $inputs = inputs();
 
-        // TODO: validation
+        $errors = [];
+        if (! Validator::email($inputs['email'])) {
+            $errors['email'] = 'Please provide a valid email address.';
+        }
+
+        if (! empty($errors)) {
+            return view('auth.login', compact('errors'));
+        }
 
         if ($this->attemp($inputs['email'], $inputs['password'])) {
             return redirect('/admin'); // Bug: to many redirects
