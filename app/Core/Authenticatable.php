@@ -9,12 +9,16 @@ trait Authenticatable
         $user = $this->db()->query("SELECT * FROM `users` WHERE `email` = :email", [
             'email' => $email,
         ])->find();
-
+        
         if ($user) {
             if (password_verify($password, $user->password)) {
-                $this->login([
-                    'email' => $email,
+                // $this->login($user);
+                Session::put('user', [
+                    'email' => $user->email,
                 ]);
+        
+                // Prevent Session Hijacking
+                session_regenerate_id(true);
 
                 return true;
             }
@@ -27,7 +31,9 @@ trait Authenticatable
     {
         $user = is_object($user) ? $user : (object) $user;
 
-        Session::flash('email', $user->email);
+        Session::put('user', [
+            'email' => $user->email,
+        ]);
 
         // Prevent Session Hijacking
         session_regenerate_id(true);

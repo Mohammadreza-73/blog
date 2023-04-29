@@ -13,6 +13,6 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        echo 'admin dashboard';
+        return view('dashboard');
     }
 }

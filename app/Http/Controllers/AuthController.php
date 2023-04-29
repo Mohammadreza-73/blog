@@ -32,11 +32,10 @@ class AuthController extends Controller
         }
 
         if ($this->attemp($inputs['email'], $inputs['password'])) {
-            return redirect('/admin'); // Bug: to many redirects
-
-        } else {
-            return redirect('/login', 'error', 'Invalid email or password.');
+            return redirect('/admin');
         }
+
+        return redirect('/login', 'error', 'Invalid email or password.');
     }
 
     public function signup()
