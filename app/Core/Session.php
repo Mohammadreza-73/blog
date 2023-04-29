@@ -4,7 +4,7 @@ namespace App\Core;
 
 class Session
 {
-    public static function put(string $key, string $value)
+    public static function put(string $key, $value)
     {
         $_SESSION[$key] = $value;
     }
