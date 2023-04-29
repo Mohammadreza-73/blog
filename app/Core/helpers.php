@@ -142,3 +142,10 @@ if (! function_exists('session')) {
         return Session::get($key);
     }
 }
+
+if (! function_exists('old')) {
+    function old(string $key, $default = '')
+    {
+        return Session::get('old')[$key] ?? $default;
+    }
+}

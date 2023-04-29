@@ -8,7 +8,7 @@
 </head>
 <body>
     <div>
-        <h4><?= session('error') ?? session('succes') ?></h4>
+        <h4><?= session('errors') ?? session('succes') ?></h4>
     </div>
     <form action="<?= url('/verify') ?>" method="post">
         <label for="email">Eamil: </label>
